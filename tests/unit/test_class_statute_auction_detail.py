@@ -1,30 +1,33 @@
 import codecs
 import os
+import pytest
 from collections import namedtuple
-from datetime import date
 from unittest import mock
 
 import requests
 
-from comprasnet import StatuseAuctionDetail
-
-statuse_detail = StatuseAuctionDetail(uasg_code=160478, auction_code=32018)
+from comprasnet.pages.statuse_auction_detail import StatuseAuctionDetail
 
 
-def test_class_attributes_and_properties():
+@pytest.fixture
+def statuse_detail():
+    return StatuseAuctionDetail(uasg_code=160478, auction_code=32018)
+
+
+def test_class_attributes_and_properties(statuse_detail):
     assert statuse_detail.auction_code == 32018
     assert statuse_detail.uasg_code == 160478
     assert statuse_detail.url == "http://comprasnet.gov.br/ConsultaLicitacoes/download" \
-                                 "/download_editais_detalhe.asp?coduasg=160478&numprp=32018" \
-                                 "&modprp=5"
+                                 "/download_editais_detalhe.asp?coduasg=160478" \
+                                 "&modprp=5&numprp=32018"
 
 
-def test_method_get_params():
+def test_method_get_params(statuse_detail):
     assert statuse_detail.get_params() == {'coduasg': 160478, 'modprp': 5, 'numprp': 32018}
 
 
-@mock.patch('comprasnet.requests.get')
-def test_method_get_data(get):
+@mock.patch('comprasnet.pages.statuse_auction_detail.requests.get')
+def test_method_get_data(get, statuse_detail):
     filename = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                             '../assets/statusedetail_page_example.html')
     with codecs.open(filename, 'r', 'iso-8859-1') as handle:
@@ -38,8 +41,8 @@ def test_method_get_data(get):
     assert statuse_detail.get_data() == page_content
 
 
-@mock.patch('comprasnet.StatuseAuctionDetail.get_data')
-def test_method_scrap_data(get_data):
+@mock.patch('comprasnet.pages.statuse_auction_detail.StatuseAuctionDetail.get_data')
+def test_method_scrap_data(get_data, statuse_detail):
     filename = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                             '../assets/statusedetail_page_example.html')
     with codecs.open(filename, 'r', 'iso-8859-1') as handle:

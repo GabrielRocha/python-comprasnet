@@ -1,5 +1,6 @@
-from comprasnet import BaseDetail
+from comprasnet.pages import BaseDetail
 import pytest
+
 
 def test_class():
     obj = BaseDetail(uasg_code=160478, auction_code=32018)
@@ -12,5 +13,3 @@ def test_class():
             method()
 
     assert str(obj) == '160478/32018'
-
-
