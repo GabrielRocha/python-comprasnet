@@ -1,5 +1,4 @@
 from . import BaseDetail, log
-from collections import OrderedDict
 from urllib.parse import urlencode
 from bs4 import BeautifulSoup
 import requests
@@ -22,7 +21,7 @@ class StatuseAuctionDetail(BaseDetail):
             'numprp': self.auction_code,
             'modprp': 5,
         }
-        return OrderedDict(sorted(params.items(), key=lambda x: x[0]))
+        return self._order_params(params)
 
     def get_data(self):
         response = requests.get(self.DETAIL_URL, params=self.get_params())

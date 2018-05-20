@@ -1,4 +1,5 @@
 import logging
+from collections import OrderedDict
 
 
 log = logging.getLogger('comprasnet')
@@ -19,6 +20,9 @@ class BaseDetail:
 
     def scrap_data(self):
         raise NotImplementedError
+
+    def _order_params(self, params):
+        return OrderedDict(sorted(params.items(), key=lambda x: x[0]))
 
     @property
     def url(self):
