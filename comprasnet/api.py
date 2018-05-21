@@ -1,4 +1,5 @@
 import logging
+# from .pages import AtaPregao
 
 import requests
 
@@ -41,5 +42,8 @@ class ComprasNetApi:
         response = self._request_search('licitacoes', 'uasgs', **params)
         if response.status_code == 200:
             return response.json()
+
+    # def get_ata_pregao(self, **params):
+    #     return AtaPregao().to_json()
 
 
