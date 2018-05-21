@@ -72,3 +72,10 @@ def test_get_terms_of_homologation(auction_minute):
                "&numprp=192018&f_lstSrp=" \
                "&f_Uf=&f_numPrp=&f_coduasg=&f_tpPregao=&f_lstICMS=&f_dtAberturaIni=&f_dtAberturaFim="
     assert auction_minute.get_terms_of_homologation() == expected
+
+
+def test_get_minutes_of_backup_register(auction_minute):
+    expected = "http://comprasnet.gov.br/livre/pregao/termocadres.asp?prgcod=712965" \
+               "&co_no_uasg=986589&numprp=192018&f_lstSrp=&f_Uf=&f_numPrp=&f_coduasg=" \
+               "&f_tpPregao=&f_lstICMS=&f_dtAberturaIni=&f_dtAberturaFim="
+    assert auction_minute.get_minutes_of_backup_register() == expected

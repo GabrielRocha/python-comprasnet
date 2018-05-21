@@ -39,10 +39,11 @@ class AtaPregao(BaseDetail):
     def scrap_data(self):
         fields = {"result_per_provider": self.get_result_per_provider_url(),
                   "declaration": self.get_declaration_url(),
-                  "terms_of_adjudication": self.get_terms_of_adjudication_url(),
-                  "clarification": self.get_clarification_url(),
+                  "minutes_of_backup_register": self.get_minutes_of_backup_register(),
                   "proposal_attachments": self.get_proposal_attachments(),
-                  "terms_of_homologation": self.get_terms_of_homologation()
+                  "terms_of_adjudication": self.get_terms_of_adjudication_url(),
+                  "terms_of_homologation": self.get_terms_of_homologation(),
+                  "clarification": self.get_clarification_url(),
                   }
         return fields
 
@@ -52,6 +53,10 @@ class AtaPregao(BaseDetail):
 
     def get_declaration_url(self):
         link = self.js_parser.get_link_inside_onclick_function_by_id("btnDeclaracoes")
+        return self._get_full_link(link)
+
+    def get_minutes_of_backup_register (self):
+        link = self.js_parser.get_link_inside_onclick_function_by_name("atacadastroreserva")
         return self._get_full_link(link)
 
     def get_proposal_attachments(self):
