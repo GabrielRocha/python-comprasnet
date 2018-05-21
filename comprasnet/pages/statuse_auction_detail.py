@@ -21,7 +21,7 @@ class StatuseAuctionDetail(BaseDetail):
             'numprp': self.auction_code,
             'modprp': 5,
         }
-        return self._order_params(params)
+        return self._order_dict(params)
 
     def get_data(self):
         response = requests.get(self.DETAIL_URL, params=self.get_params())

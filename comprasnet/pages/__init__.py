@@ -21,7 +21,7 @@ class BaseDetail:
     def scrap_data(self):
         raise NotImplementedError
 
-    def _order_params(self, params):
+    def _order_dict(self, params):
         return OrderedDict(sorted(params.items(), key=lambda x: x[0]))
 
     @property
