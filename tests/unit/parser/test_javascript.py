@@ -14,20 +14,21 @@ def javascript_parser():
 
 def test_get_onclick_function_by_id(javascript_parser):
     expected = "localhost"
-    assert javascript_parser.get_onclick_function_by_id("btnDeclaracoes") == expected
+    assert javascript_parser.get_link_inside_onclick_function_by_id("btnDeclaracoes") == expected
 
 
 def test_invalid_id_at_get_onclick_function_by_id(javascript_parser):
-    assert javascript_parser.get_onclick_function_by_id("test") is None
+    assert javascript_parser.get_link_inside_onclick_function_by_id("test") is None
 
 
 def test_invalid_name_at_get_onclick_function_by_name(javascript_parser):
-    assert javascript_parser.get_onclick_function_by_id("test") is None
+    assert javascript_parser.get_link_inside_onclick_function_by_name("test") is None
 
 
 def test_get_onclick_function_by_name(javascript_parser):
     expected = 'Here?parameter=coduasg'
-    assert javascript_parser.get_onclick_function_by_name("btnResultadoFornecr") == expected
+    result = javascript_parser.get_link_inside_onclick_function_by_name("btnResultadoFornecr")
+    assert result == expected
 
 
 def test_get_js_code(javascript_parser):

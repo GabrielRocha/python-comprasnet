@@ -39,11 +39,11 @@ class JavaScriptParser:
                 index_brace += close_braces + 1
         return OnClickFunctionJS(function, self.code[begin: end])
 
-    def get_onclick_function_by_id(self, id):
+    def get_link_inside_onclick_function_by_id(self, id):
         element = self.bs_object.find(id=id)
         return self._get_onclick_function_link(element)
 
-    def get_onclick_function_by_name(self, name):
+    def get_link_inside_onclick_function_by_name(self, name):
         element = self.bs_object.find("", {"name": name})
         return self._get_onclick_function_link(element)
 

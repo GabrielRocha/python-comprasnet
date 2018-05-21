@@ -41,29 +41,37 @@ class AtaPregao(BaseDetail):
                   "declaration": self.get_declaration_url(),
                   "terms_of_adjudication": self.get_terms_of_adjudication_url(),
                   "clarification": self.get_clarification_url(),
-                  "proposal_attachments": self.get_proposal_attachments()
+                  "proposal_attachments": self.get_proposal_attachments(),
+                  "terms_of_homologation": self.get_terms_of_homologation()
                   }
         return fields
 
     def get_result_per_provider_url(self):
-        return "{}{}".format(self.ROOT_URL,
-                             self.js_parser.get_onclick_function_by_id("btnResultadoFornecr"))
+        link = self.js_parser.get_link_inside_onclick_function_by_id("btnResultadoFornecr")
+        return self._get_full_link(link)
 
     def get_declaration_url(self):
-        return "{}{}".format(self.ROOT_URL,
-                             self.js_parser.get_onclick_function_by_id("btnDeclaracoes"))
-
-    def get_terms_of_adjudication_url(self):
-        return "{}{}".format(self.ROOT_URL,
-                             self.js_parser.get_onclick_function_by_id("btnTermAdj"))
-
-    def get_clarification_url(self):
-        return "{}{}".format(self.ROOT_URL,
-                             self.js_parser.get_onclick_function_by_id("esclarecimento"))
+        link = self.js_parser.get_link_inside_onclick_function_by_id("btnDeclaracoes")
+        return self._get_full_link(link)
 
     def get_proposal_attachments(self):
-        return "{}{}".format(self.ROOT_URL,
-                             self.js_parser.get_onclick_function_by_name("AnexosProposta"))
+        link = self.js_parser.get_link_inside_onclick_function_by_name("AnexosProposta")
+        return self._get_full_link(link)
+
+    def get_terms_of_adjudication_url(self):
+        link = self.js_parser.get_link_inside_onclick_function_by_id("btnTermAdj")
+        return self._get_full_link(link)
+
+    def get_terms_of_homologation(self):
+        link = self.js_parser.get_link_inside_onclick_function_by_name("termodehomologacao")
+        return self._get_full_link(link)
+
+    def get_clarification_url(self):
+        link = self.js_parser.get_link_inside_onclick_function_by_id("esclarecimento")
+        return self._get_full_link(link)
+
+    def _get_full_link(self, link):
+        return "{}{}".format(self.ROOT_URL, link)
 
     def to_json(self):
         return json.dumps({})
