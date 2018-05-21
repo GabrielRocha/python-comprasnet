@@ -51,7 +51,7 @@ def test_execpt_get_url_inside_function(onclick_function):
 
 
 def test_get_url_with_parameters(onclick_function):
-    url  = onclick_function.get_url_with_parameters()
+    url = onclick_function.get_url_with_parameters()
     expected = 'Here?parameter=123'
     assert url == expected
 

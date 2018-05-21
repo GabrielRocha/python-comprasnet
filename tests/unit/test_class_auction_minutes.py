@@ -1,8 +1,29 @@
 import requests_mock
+import os
+import json
 
 
-def test_to_json_should_return_a_dict(auction_minute):
-    assert auction_minute.to_json() == '{}'
+ROOT_PATH = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+
+def test_to_json_should_return_auction_fields(auction_minute):
+    with open("{}/assets/scrap_data_auction_minutes.json".format(ROOT_PATH)) as response:
+        expected = json.loads(response.read().replace("\n", ""))
+    result = json.loads(auction_minute.to_json())
+    assert result == expected
+
+
+def test_to_json_size(auction_minute):
+    result = json.loads(auction_minute.to_json())
+    assert len(result) == 9
+
+
+def test_scrap_data_result(auction_minute):
+    with open("{}/assets/scrap_data_auction_minutes.json".format(ROOT_PATH)) as response:
+        expected = json.loads(response.read())
+    result = auction_minute.scrap_data()
+    for key, value in expected.items():
+        assert result[key] == value
 
 
 def test_url(auction_minute):
@@ -21,16 +42,17 @@ def test_get_data(auction_minute):
         assert auction_minute.get_data() == "Success"
 
 
-def test_result_scrap_data(auction_minute):
-    expected = "http://comprasnet.gov.br/livre/pregao/FornecedorResultado.asp?prgcod=712965" \
-               "&strTipoPregao=E"
-    expected_declaration = "http://comprasnet.gov.br/livre/pregao/declaracoesProposta.asp?" \
-                           "prgCod=712965"
+def test_keys_scrap_data(auction_minute):
     result = auction_minute.scrap_data()
     assert "result_per_provider" in result
     assert "declaration" in result
-    assert result["result_per_provider"] == expected
-    assert result["declaration"] == expected_declaration
+    assert "minutes_of_backup_register" in result
+    assert "proposal_attachments" in result
+    assert "terms_of_adjudication" in result
+    assert "terms_of_homologation" in result
+    assert "clarification" in result
+    assert "auction_minute" in result
+    assert "auction_id" in result
 
 
 def test_get_result_per_provider_url(auction_minute):
@@ -87,3 +109,8 @@ def test_get_auction_minute(auction_minute):
                "&f_Uf=&f_numPrp=&f_coduasg=&f_tpPregao=&f_lstICMS=" \
                "&f_dtAberturaIni=&f_dtAberturaFim="
     assert auction_minute.get_auction_minute() == expected
+
+
+def test_get_auction_id(auction_minute):
+    expected = "Nº 00019/2018 (SRP)"
+    assert auction_minute.get_auction_id() == expected

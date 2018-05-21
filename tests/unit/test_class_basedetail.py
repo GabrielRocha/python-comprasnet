@@ -18,7 +18,7 @@ def test_class(base_detail):
     assert str(base_detail) == '160478/32018'
 
 
-def test__order_params(base_detail):
-    params = {"x" : None, "z": None, "a": None}
-    expected = {"a" : None, "x": None, "z": None}
-    assert base_detail._order_params(params) == expected
+def test__order_dict(base_detail):
+    params = {"x": None, "z": None, "a": None}
+    expected = {"a": None, "x": None, "z": None}
+    assert base_detail._order_dict(params) == expected
