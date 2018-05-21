@@ -5,7 +5,7 @@ import re
 
 class JavaScriptParser:
 
-    REGEX_JS = re.compile("^'javascript\:'| *(\w*)\(([\w*| |\,|\'|\"]*)\)\;$")
+    REGEX_JS = re.compile("^(?:javascript\:| |)*(\w*)\(([\w*| |\,|\'|\"|\_|\&|\=]*)\)\;$")
 
     def __init__(self, html):
         self.bs_object = BeautifulSoup(html, "html.parser")

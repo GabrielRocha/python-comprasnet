@@ -44,6 +44,7 @@ class AtaPregao(BaseDetail):
                   "terms_of_adjudication": self.get_terms_of_adjudication_url(),
                   "terms_of_homologation": self.get_terms_of_homologation(),
                   "clarification": self.get_clarification_url(),
+                  "auction_minute": self.get_auction_minute()
                   }
         return fields
 
@@ -73,6 +74,11 @@ class AtaPregao(BaseDetail):
 
     def get_clarification_url(self):
         link = self.js_parser.get_link_inside_onclick_function_by_id("esclarecimento")
+        return self._get_full_link(link)
+
+    def get_auction_minute(self):
+        name = "{}-{}-1".format(self.co_no_uasg, self.numprp)
+        link = self.js_parser.get_link_inside_onclick_function_by_name(name)
         return self._get_full_link(link)
 
     def _get_full_link(self, link):

@@ -3,7 +3,7 @@ import re
 
 class OnClickFunctionJS:
 
-    HREF_REGEX = re.compile(r'document.location.href[ |]*=[ |]*([\w|.?|=|+| |"|&]*)')
+    HREF_REGEX = re.compile(r'document.location.href[ |]*=[ |]*([\w|.?|=|+| |"|\'|&]*)')
     FUNCTION_REGEX = re.compile(r"function[| ]*(\w*)\(([\w*| |\,|]*)\)")
     URL_REGEX = re.compile(r'url[ |]*\=([ |]*([\w|\.\?|\=|\+| |\"|\'|\&]*))')
     OPEN_REGEX = re.compile(r'window\.open\(([ |]*([\w|\.\?|\=|\+| |\"|\'|\&]*))')

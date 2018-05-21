@@ -79,3 +79,11 @@ def test_get_minutes_of_backup_register(auction_minute):
                "&co_no_uasg=986589&numprp=192018&f_lstSrp=&f_Uf=&f_numPrp=&f_coduasg=" \
                "&f_tpPregao=&f_lstICMS=&f_dtAberturaIni=&f_dtAberturaFim="
     assert auction_minute.get_minutes_of_backup_register() == expected
+
+
+def test_get_auction_minute(auction_minute):
+    expected = "http://comprasnet.gov.br/livre/pregao/AtaEletronico.asp?" \
+               "co_no_uasg=986589&&uasg=986589&numprp=192018&Seq=1&f_lstSrp=" \
+               "&f_Uf=&f_numPrp=&f_coduasg=&f_tpPregao=&f_lstICMS=" \
+               "&f_dtAberturaIni=&f_dtAberturaFim="
+    assert auction_minute.get_auction_minute() == expected
