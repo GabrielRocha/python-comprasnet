@@ -39,7 +39,10 @@ class AtaPregao(BaseDetail):
 
     def scrap_data(self):
         return {"result_per_provider": self.get_result_per_provider_url(),
-                "declaration": self.get_declaration_url()}
+                "declaration": self.get_declaration_url(),
+                "terms_of_adjudication": self.get_terms_of_adjudication_url(),
+                "clarification": self.get_clarification_url()
+                }
 
     def get_result_per_provider_url(self):
         return "{}{}".format(self.ROOT_URL,
@@ -48,6 +51,14 @@ class AtaPregao(BaseDetail):
     def get_declaration_url(self):
         return "{}{}".format(self.ROOT_URL,
                              self.js_parser.get_onclick_function_link("btnDeclaracoes"))
+
+    def get_terms_of_adjudication_url(self):
+        return "{}{}".format(self.ROOT_URL,
+                             self.js_parser.get_onclick_function_link("btnTermAdj"))
+
+    def get_clarification_url(self):
+        return "{}{}".format(self.ROOT_URL,
+                             self.js_parser.get_onclick_function_link("esclarecimento"))
 
     def to_json(self):
         return json.dumps({})

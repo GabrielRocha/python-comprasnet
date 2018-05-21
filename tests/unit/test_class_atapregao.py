@@ -45,3 +45,17 @@ def test_get_declaration_url(auction_minute):
     expected = "http://comprasnet.gov.br/livre/pregao/declaracoesProposta.asp?prgCod=712965"
     result = auction_minute.get_declaration_url()
     assert result == expected
+
+
+def test_get_terms_of_adjudication_url(auction_minute):
+    expected = """http://comprasnet.gov.br/livre/pregao/termojulg.asp?\
+prgcod=712965&Acao=A&co_no_uasg=986589&numprp=192018&f_lstSrp=&f_Uf=&f_numPrp=\
+&f_coduasg=&f_tpPregao=&f_lstICMS=&f_dtAberturaIni=&f_dtAberturaFim="""
+    result = auction_minute.get_terms_of_adjudication_url()
+    assert result == expected
+
+
+def test_get_clarification_url(auction_minute):
+    expected = "http://comprasnet.gov.br/livre/pregao/avisos1.asp?prgCod=712965&Origem=Avisos&Tipo=E"
+    result = auction_minute.get_clarification_url()
+    assert result == expected
