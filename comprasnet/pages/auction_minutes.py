@@ -7,7 +7,6 @@ import json
 
 
 class AtaPregao(BaseDetail):
-
     ROOT_URL = "http://comprasnet.gov.br/livre/pregao/"
     DETAIL_URL = "{}ata2.asp".format(ROOT_URL)
 
@@ -38,27 +37,33 @@ class AtaPregao(BaseDetail):
         return response.text
 
     def scrap_data(self):
-        return {"result_per_provider": self.get_result_per_provider_url(),
-                "declaration": self.get_declaration_url(),
-                "terms_of_adjudication": self.get_terms_of_adjudication_url(),
-                "clarification": self.get_clarification_url()
-                }
+        fields = {"result_per_provider": self.get_result_per_provider_url(),
+                  "declaration": self.get_declaration_url(),
+                  "terms_of_adjudication": self.get_terms_of_adjudication_url(),
+                  "clarification": self.get_clarification_url(),
+                  "proposal_attachments": self.get_proposal_attachments()
+                  }
+        return fields
 
     def get_result_per_provider_url(self):
         return "{}{}".format(self.ROOT_URL,
-                             self.js_parser.get_onclick_function_link("btnResultadoFornecr"))
+                             self.js_parser.get_onclick_function_by_id("btnResultadoFornecr"))
 
     def get_declaration_url(self):
         return "{}{}".format(self.ROOT_URL,
-                             self.js_parser.get_onclick_function_link("btnDeclaracoes"))
+                             self.js_parser.get_onclick_function_by_id("btnDeclaracoes"))
 
     def get_terms_of_adjudication_url(self):
         return "{}{}".format(self.ROOT_URL,
-                             self.js_parser.get_onclick_function_link("btnTermAdj"))
+                             self.js_parser.get_onclick_function_by_id("btnTermAdj"))
 
     def get_clarification_url(self):
         return "{}{}".format(self.ROOT_URL,
-                             self.js_parser.get_onclick_function_link("esclarecimento"))
+                             self.js_parser.get_onclick_function_by_id("esclarecimento"))
+
+    def get_proposal_attachments(self):
+        return "{}{}".format(self.ROOT_URL,
+                             self.js_parser.get_onclick_function_by_name("AnexosProposta"))
 
     def to_json(self):
         return json.dumps({})

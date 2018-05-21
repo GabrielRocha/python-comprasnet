@@ -12,13 +12,22 @@ def javascript_parser():
     return JavaScriptParser(open(path).read())
 
 
-def test_get_onclick_function_link(javascript_parser):
+def test_get_onclick_function_by_id(javascript_parser):
     expected = "localhost"
-    assert javascript_parser.get_onclick_function_link("btnDeclaracoes") == expected
+    assert javascript_parser.get_onclick_function_by_id("btnDeclaracoes") == expected
 
 
-def test_invalid_id_at_get_onclick_function_link(javascript_parser):
-    assert javascript_parser.get_onclick_function_link("test") is None
+def test_invalid_id_at_get_onclick_function_by_id(javascript_parser):
+    assert javascript_parser.get_onclick_function_by_id("test") is None
+
+
+def test_invalid_name_at_get_onclick_function_by_name(javascript_parser):
+    assert javascript_parser.get_onclick_function_by_id("test") is None
+
+
+def test_get_onclick_function_by_name(javascript_parser):
+    expected = 'Here?parameter=coduasg'
+    assert javascript_parser.get_onclick_function_by_name("btnResultadoFornecr") == expected
 
 
 def test_get_js_code(javascript_parser):
@@ -42,7 +51,7 @@ def test_clean_onlick_function(javascript_parser):
 
 def test_html_without_onlick_function():
     javascript_parser = JavaScriptParser("")
-    text = "Fornecedor(712965);"
+    text = "712965;"
     result = javascript_parser._clean_onlick_function(text)
     assert result['name'] == ""
     assert result['parameters'] == []
