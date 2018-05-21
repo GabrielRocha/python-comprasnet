@@ -7,8 +7,10 @@ import re
 
 
 class AtaPregao(BaseDetail):
+
     REGEX_JS = re.compile("^javascript\:(\w*)\(([\w*| |\,|]*)\)\;$")
-    DETAIL_URL = "http://comprasnet.gov.br/livre/pregao/ata2.asp"
+    ROOT_URL = "http://comprasnet.gov.br/livre/pregao/"
+    DETAIL_URL = "{}ata2.asp".format(ROOT_URL)
 
     def __init__(self, co_no_uasg, numprp):
         self.co_no_uasg = co_no_uasg
@@ -35,8 +37,10 @@ class AtaPregao(BaseDetail):
         return response.text
 
     def scrap_data(self):
-        data = self.get_data()
-        bs_object = BeautifulSoup(data, "html.parser")
+        result_per_provider = "{}{}".format(self.ROOT_URL, self.get_link("btnResultadoFornecr"))
+        declaration = "{}{}".format(self.ROOT_URL, self.get_link("btnDeclaracoes"))
+        return {"result_per_provider": result_per_provider,
+                "declaration": declaration}
 
     def _find_js_code(self):
         try:
@@ -62,15 +66,32 @@ class AtaPregao(BaseDetail):
     def find_link_inside_function(self, function_name):
         return self.get_href_ref(function_name) or self.get_windows_open_ref(function_name)
 
+    def _build_parameters(self, function_name, parameters):
+        try:
+            regex = r"function[| ]*(\w*)\(([\w*| |\,|]*)\)"
+            text = self._find_js_function(function_name)
+            groups = re.search(regex, text).groups()[1]
+            parameters_names = [parameter.strip() for parameter in groups.split(",")]
+            return dict(zip(parameters_names, parameters))
+        except IndexError:
+            return {}
+
+    def _create_url_with_parameters(self, url, parameters):
+        for name, value in parameters.items():
+            regex = "\+[ |]*({})".format(name)
+            url = re.sub(regex, str(value), url)
+        return re.sub(r"\'|\"|\+| ", "", url)
+
     def get_href_ref(self, function_name):
         try:
             text = self._find_js_function(function_name)
-            match = re.search(r'document\.location\.href[ |]*\=[ |]*([\w|\.\?|\=|\+| |\"|\&]*)', text, re.MULTILINE)
+            regex = r'document\.location\.href[ |]*\=[ |]*([\w|\.\?|\=|\+| |\"|\&]*)'
+            match = re.search(regex, text, re.MULTILINE)
             url = match.groups()[0]
             if url == "url":
                 return self.get_url_by_variable(text)
             return url
-        except IndexError:
+        except (IndexError, AttributeError):
             return
 
     def get_windows_open_ref(self, function_name):
@@ -82,7 +103,7 @@ class AtaPregao(BaseDetail):
             if url == "url":
                 return self.get_url_by_variable(text)
             return url
-        except IndexError:
+        except (IndexError, AttributeError):
             return
 
     def get_url_by_variable(self, text):
@@ -95,18 +116,21 @@ class AtaPregao(BaseDetail):
 
     def _clean_onlick_function(self, function):
         try:
-            regex = self.REGEX_JS.match(function).groups()
-            function_name = regex[0]
-            parameters = [parameter.strip() for parameter in regex[-1].split(",")]
-            return {"function_name": function_name, "parameters": parameters}
+            groups = self.REGEX_JS.match(function).groups()
+            function_name = groups[0]
+            parameters = [parameter.strip() for parameter in groups[-1].split(",")]
+            return {"name": function_name, "parameters": parameters}
         except AttributeError:
-            return function
+            return {"name": "", "parameters": ""}
 
-    def get_result_per_provider_link(self, bs_object):
-        element = bs_object.find(id="btnResultadoFornecr")
+    def get_link(self, id):
+        element = self.bs_object.find(id=id)
         try:
             function = self._clean_onlick_function(element['onclick'])
-            self._find_js_function(function)
+            url = self.find_link_inside_function(function['name'])
+            dict_parameters = self._build_parameters(function['name'],
+                                                     function['parameters'])
+            return self._create_url_with_parameters(url, dict_parameters)
         except KeyError:
             log.error()
 

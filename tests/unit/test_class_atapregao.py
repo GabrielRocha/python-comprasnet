@@ -41,24 +41,24 @@ def test_get_data(auction_minute):
         assert auction_minute.get_data() == "Success"
 
 
-@pytest.mark.xfail(reason="Not Implemented")
-def test_get_result_per_provider_link(auction_minute, bs_object):
-    expected = "http://comprasnet.gov.br/livre/pregao/FornecedorResultado.asp?\
-    prgcod=712965&strTipoPregao=E"
-    assert auction_minute.get_result_per_provider_link(bs_object) == expected
+def test_build_parameters(auction_minute):
+    parameters = auction_minute._build_parameters("ValidaCodigo", [1, 2])
+    assert len(parameters) == 2
+    assert parameters['NomeArquivo'] == 1
+    assert parameters['coduasg'] == 2
 
 
 def test_clean_onlick_function(auction_minute):
     text = "javascript:resultadoFornecedor(712965);"
     result = auction_minute._clean_onlick_function(text)
-    assert result['function_name'] == "resultadoFornecedor"
+    assert result['name'] == "resultadoFornecedor"
     assert result['parameters'] == ["712965"]
 
 
 def test_clean_onlick_function_multiple_parameters(auction_minute):
     text = "javascript:resultadoFornecedor(712965, 123, 9);"
     result = auction_minute._clean_onlick_function(text)
-    assert result['function_name'] == "resultadoFornecedor"
+    assert result['name'] == "resultadoFornecedor"
     assert result['parameters'] == ["712965", "123", "9"]
 
 
@@ -96,3 +96,30 @@ def test_get_windows_open_ref(auction_minute):
     result = auction_minute.get_windows_open_ref("teste_open")
     expected = '"path"'
     assert result == expected
+
+
+def test_create_url_with_parameters(auction_minute):
+    url_base = '"Here?parameter=" + coduasg'
+    parameters = {"coduasg": 123}
+    url  = auction_minute._create_url_with_parameters(url_base, parameters)
+    expected = 'Here?parameter=123'
+    assert url == expected
+
+
+def test_get_result_per_provider_link(auction_minute):
+    expected = "FornecedorResultado.asp?prgcod=712965&strTipoPregao=E"
+    assert auction_minute.get_link("btnResultadoFornecr") == expected
+
+
+def test_result_per_provider_scrap_data(auction_minute):
+    expected = "http://comprasnet.gov.br/livre/pregao/FornecedorResultado.asp?prgcod=712965&strTipoPregao=E"
+    result = auction_minute.scrap_data()
+    assert "result_per_provider" in result
+    assert result["result_per_provider"] == expected
+
+
+def test_declaration_scrap_data(auction_minute):
+    expected = "http://comprasnet.gov.br/livre/pregao/declaracoesProposta.asp?prgCod=712965"
+    result = auction_minute.scrap_data()
+    assert "declaration" in result
+    assert result["declaration"] == expected
