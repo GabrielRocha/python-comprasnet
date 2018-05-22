@@ -1,5 +1,5 @@
 from collections import namedtuple
-from comprasnet.pages.auction_minutes import AtaPregao
+from comprasnet.pages.auction_minutes import AuctionMinutes
 from unittest import mock
 import pytest
 import os
@@ -15,4 +15,4 @@ def auction_minute(get):
     with open(path) as html:
         MockResponse.text = html.read()
     get.return_value = MockResponse
-    return AtaPregao(1234, 987)
+    return AuctionMinutes(1234, 987)

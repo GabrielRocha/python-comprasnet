@@ -6,7 +6,7 @@ import requests
 import json
 
 
-class AtaPregao(BaseDetail):
+class AuctionMinutes(BaseDetail):
     ROOT_URL = "http://comprasnet.gov.br/livre/pregao/"
     DETAIL_URL = "{}ata2.asp".format(ROOT_URL)
 

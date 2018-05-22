@@ -1,7 +1,7 @@
+from comprasnet.pages.auction_minutes import AuctionMinutes
 import logging
-# from .pages import AtaPregao
-
 import requests
+
 
 log = logging.getLogger('comprasnet')
 
@@ -43,7 +43,7 @@ class ComprasNetApi:
         if response.status_code == 200:
             return response.json()
 
-    # def get_ata_pregao(self, **params):
-    #     return AtaPregao().to_json()
+    def get_auction_minutes(self, co_no_uasg, numprp):
+        return AuctionMinutes(co_no_uasg, numprp).to_json()
 
 
